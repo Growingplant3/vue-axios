@@ -1,83 +1,16 @@
 <template>
-  <div id="app">
-    <h3>掲示板に投稿する</h3>
-    <label for='name'>ニックネーム：</label>
-    <input
-      id='name'
-      type='text'
-      v-model='name'
-    >
-    <br><br>
-    <label for='comment'>コメント：</label>
-    <textarea
-      id='comment'
-      v-model='comment'
-    ></textarea>
-    <br><br>
-    <button @click='createComment'>コメントをサーバーに送る</button>
-    <h2>掲示板</h2>
-    <div v-for='post in posts' :key="post.name">
-      <div>名前： {{ post.fields.name.stringValue }} </div>
-      <div>コメント： {{ post.fields.comment.stringValue }} </div>
-      <br>
-    </div>
+  <div id='app'>
+    <header>
+      <router-link to='/' class='header-item'>掲示板</router-link>
+      <router-link to='/login' class='header-item'>ログイン</router-link>
+      <router-link to='/register' class='header-item'>登録</router-link>
+    </header>
+    <router-view></router-view>
   </div>
 </template>
 
-<script>
-import axios from 'axios';
-export default {
-  data() {
-    return {
-      name: '',
-      comment: '',
-      posts: [],
-    };
-  },
-  created() {
-    axios.get( // getの引数は2つ(url, 追加の設定)
-      'https://firestore.googleapis.com/v1/projects/vuejs-http-81da8/databases/(default)/documents/comments',
-    )
-    .then(res => {
-      this.posts = res.data.documents;
-    });
-  },
-  methods: {
-    createComment() {
-      // axiosはPromiseを返す = 非同期処理 
-      axios.post( // postの引数は3つ(firebaseサーバーのurl, postするコメント/data, 追加の設定)
-        'https://firestore.googleapis.com/v1/projects/vuejs-http-81da8/databases/(default)/documents/comments',
-        {
-          fields: {
-            name: {
-              stringValue: this.name
-            },
-            comment: {
-              stringValue: this.comment
-            }
-          }
-        }
-      );
-      // .then(res => {
-      //   console.log(res); 正常動作時処理
-      // })
-      // .catch(err => {
-      //   console.log(err); 例外発生時処理
-      // });
-      this.name = '';
-      this.comment = '';
-    }
-  }
-};
-</script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+<style scoped>
+.header-item {
+  padding: 10px;
 }
 </style>
