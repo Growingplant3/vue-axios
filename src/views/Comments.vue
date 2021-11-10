@@ -36,9 +36,18 @@ export default {
       posts: [],
     };
   },
+  computed: {
+    idToken() {
+      return this.$store.getters.idToken;
+    }
+  },
   created() {
     axios.get( // getの引数は2つ(url, 追加の設定)
-      '/comments',
+      '/comments', {
+        headers: {
+          Authorization: `Bearer ${this.idToken}`
+        }
+      }
     )
     .then(res => {
       this.posts = res.data.documents;
@@ -58,6 +67,11 @@ export default {
             comment: {
               stringValue: this.comment
             }
+          }
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${this.idToken}`
           }
         }
       );
