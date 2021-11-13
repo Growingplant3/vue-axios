@@ -38,8 +38,10 @@ axios.interceptors.request.eject(interceptorsRequest);
  // つまりconst interceptorsRequestが発火しなくなった、という意味
 axios.interceptors.response.eject(interceptorsResponse);
 
-new Vue({
-  router,
-  store,
-  render: h => h(App),
-}).$mount('#app')
+store.dispatch('autoLogin').then(() => {
+  new Vue({
+    router,
+    store,
+    render: h => h(App),
+  }).$mount('#app')
+});
